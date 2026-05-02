@@ -2,38 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-const courses = [
-  {
-    id: 1,
-    title: "The Mindset Reset",
-    price: "799 AED",
-    duration: "6 Weeks",
-    rating: 4.9,
-    features: ["Weekly Live Coaching", "Private Community Access", "Transformation Toolkit", "Lifetime Updates"],
-    popular: false
-  },
-  {
-    id: 2,
-    title: "Mastery of Purpose",
-    price: "1899 AED",
-    duration: "3 Months",
-    rating: 5.0,
-    features: ["1-on-1 Strategy Calls", "Unlimited Email Support", "Career Breakthrough Plan", "VIP Mastermind Access"],
-    popular: true
-  },
-  {
-    id: 3,
-    title: "Financial Freedom",
-    price: "1099 AED",
-    duration: "8 Weeks",
-    rating: 4.8,
-    features: ["Wealth Building Framework", "Automated Savings Setup", "Debt Elimination Guide", "Monthly Q&A"],
-    popular: false
-  }
-];
+import { useContent } from '../context/ContentContext';
 
 const CoursePlans = () => {
+  const { content } = useContent();
+  const { courses } = content;
+
   return (
     <section id="courses" className="courses">
       <div className="container">

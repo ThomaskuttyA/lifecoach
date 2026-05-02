@@ -1,8 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, ArrowRight } from 'lucide-react';
+import { useContent } from '../context/ContentContext';
 
 const Hero = () => {
+  const { content } = useContent();
+  const { hero } = content;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -33,13 +37,15 @@ const Hero = () => {
           animate="visible"
         >
           <motion.span className="hero-badge" variants={itemVariants}>
-            Mindset & Growth Coach
+            {hero.badge}
           </motion.span>
           <motion.h1 className="hero-title" variants={itemVariants}>
-            Unlock Your <span className="highlight">True Potential</span> & Design Your Life
+            {hero.title.split(' ').map((word, i) => (
+              word === 'True' || word === 'Potential' ? <span key={i} className="highlight">{word} </span> : word + ' '
+            ))}
           </motion.h1>
           <motion.p className="hero-description" variants={itemVariants}>
-            Transformation doesn't happen by chance, it happens by design. Join 5,000+ individuals who have redefined their success through our proven mindset shifts.
+            {hero.description}
           </motion.p>
           <motion.div className="hero-btns" variants={itemVariants}>
             <motion.button 
@@ -66,15 +72,15 @@ const Hero = () => {
           transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
         >
           <div className="image-card">
-            <img src="/coach-hero.png" alt="Nayora Bloom" className="hero-img" />
+            <img src={hero.image} alt="Nayora Bloom" className="hero-img" />
             <motion.div 
               className="experience-tag glass"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.6 }}
             >
-              <span className="number">10+</span>
-              <span className="label">Years of Experience</span>
+              <span className="number">{hero.stats.number}</span>
+              <span className="label">{hero.stats.label}</span>
             </motion.div>
           </div>
           <div className="blob-bg"></div>

@@ -1,32 +1,12 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const reviews = [
-  {
-    id: 1,
-    name: "Sarah Jenkins",
-    role: "Marketing Director",
-    text: "Working with Nayora Bloom was a turning point in my life. She helped me realize that my limitations were mostly self-imposed. I've never been more confident.",
-    image: "https://i.pravatar.cc/150?u=sarah"
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    role: "Tech Founder",
-    text: "The 'Mastery of Purpose' course gave me the clarity I needed when I was burned out. Nayora Bloom's approach is both empathetic and incredibly practical.",
-    image: "https://i.pravatar.cc/150?u=michael"
-  },
-  {
-    id: 3,
-    name: "Elena Rodriguez",
-    role: "Creative Artist",
-    text: "I was stuck for years. Within 3 months of coaching, I've launched my studio and regained my passion. Truly life-changing experience.",
-    image: "https://i.pravatar.cc/150?u=elena"
-  }
-];
+import { useContent } from '../context/ContentContext';
 
 const Reviews = () => {
+  const { content } = useContent();
+  const { reviews } = content;
+
   return (
     <section id="reviews" className="reviews">
       <div className="container">

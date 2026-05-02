@@ -1,20 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, Calendar, Bell, ArrowRight } from 'lucide-react';
-
-const videos = [
-  { id: 1, title: "Morning Routine for Peak Performance", duration: "12:45", thumbnail: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80" },
-  { id: 2, title: "Overcoming Imposter Syndrome", duration: "15:20", thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=400&q=80" },
-  { id: 3, title: "Designing Your Dream Career", duration: "22:10", thumbnail: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=400&q=80" },
-];
-
-const notices = [
-  { id: 1, title: "Live Mindset Workshop", date: "Today, 6:00 PM", type: "live", description: "Join us for a live session on building resilience. Check your email for the Zoom link!" },
-  { id: 2, title: "New Module Added: Goal Setting", date: "Yesterday", type: "update", description: "The 'Mastery of Purpose' course just got a new module on SMART goals." },
-  { id: 3, title: "VIP Mastermind Enrollment", date: "Starts May 15", type: "event", description: "Early bird registration for the Summer Mastermind opens next week." },
-];
+import { useContent } from '../context/ContentContext';
 
 const VideoNotice = () => {
+  const { content } = useContent();
+  const { videos, notices } = content.videoNotice;
+
   return (
     <section id="updates" className="video-notice">
       <div className="container grid-layout">
