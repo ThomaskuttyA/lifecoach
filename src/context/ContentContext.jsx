@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 
 const ContentContext = createContext();
 
@@ -80,15 +81,39 @@ const initialContent = {
 };
 
 export const ContentProvider = ({ children }) => {
-  const [content, setContent] = useState(() => {
-    const savedContent = localStorage.getItem('siteContent');
-    return savedContent ? JSON.parse(savedContent) : initialContent;
-  });
+  const [content, setContent] = useState(initialContent);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [isAdmin, setIsAdmin] = useState(() => {
     return localStorage.getItem('isAdmin') === 'true';
   });
 
+  // Fetch content from Supabase on mount
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (!supabase) {
+        setIsLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('site_content')
+        .select('data')
+        .eq('id', 1)
+        .single();
+
+      if (error) {
+        console.error('Error fetching content:', error);
+      } else if (data) {
+        setContent(data.data);
+      }
+      setIsLoading(false);
+    };
+
+    fetchContent();
+  }, []);
+
+  // Persistence to localStorage as fallback
   useEffect(() => {
     localStorage.setItem('siteContent', JSON.stringify(content));
   }, [content]);
@@ -97,24 +122,42 @@ export const ContentProvider = ({ children }) => {
     localStorage.setItem('isAdmin', isAdmin);
   }, [isAdmin]);
 
-  const updateHero = (heroData) => {
-    setContent(prev => ({ ...prev, hero: { ...prev.hero, ...heroData } }));
+  const updateSupabase = async (newContent) => {
+    if (!supabase) return;
+    
+    const { error } = await supabase
+      .from('site_content')
+      .upsert({ id: 1, data: newContent });
+
+    if (error) throw error;
   };
 
-  const updateCourses = (coursesData) => {
-    setContent(prev => ({ ...prev, courses: coursesData }));
+  const updateHero = async (heroData) => {
+    const newContent = { ...content, hero: { ...content.hero, ...heroData } };
+    setContent(newContent);
+    await updateSupabase(newContent);
   };
 
-  const updateReviews = (reviewsData) => {
-    setContent(prev => ({ ...prev, reviews: reviewsData }));
+  const updateCourses = async (coursesData) => {
+    const newContent = { ...content, courses: coursesData };
+    setContent(newContent);
+    await updateSupabase(newContent);
   };
 
-  const updateVideoNotice = (videoNoticeData) => {
-    setContent(prev => ({ ...prev, videoNotice: videoNoticeData }));
+  const updateReviews = async (reviewsData) => {
+    const newContent = { ...content, reviews: reviewsData };
+    setContent(newContent);
+    await updateSupabase(newContent);
+  };
+
+  const updateVideoNotice = async (videoNoticeData) => {
+    const newContent = { ...content, videoNotice: videoNoticeData };
+    setContent(newContent);
+    await updateSupabase(newContent);
   };
 
   const login = (password) => {
-    if (password === 'admin123') { // Simple password for demo
+    if (password === 'admin123') {
       setIsAdmin(true);
       return true;
     }
@@ -128,6 +171,7 @@ export const ContentProvider = ({ children }) => {
   return (
     <ContentContext.Provider value={{ 
       content, 
+      isLoading,
       updateHero, 
       updateCourses, 
       updateReviews, 
